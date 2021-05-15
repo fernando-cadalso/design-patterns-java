@@ -1,18 +1,21 @@
 package br.com.alura.loja.pedido;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import br.com.alura.loja.orcamento.Orcamento;
+import br.com.alura.loja.pedido.acao.AcaoAposGerarPedido;
 
-public class GeraPedido {
+public class GerarPedido {
 
 	private Orcamento orcamento;
 	private String cliente;
+	private List<AcaoAposGerarPedido> acoes;
 
-	public GeraPedido(Orcamento orcamento, String cliente) {
+	public GerarPedido(Orcamento orcamento, String cliente, List<AcaoAposGerarPedido> acoes) {
 		this.orcamento = orcamento;
 		this.cliente = cliente;
+		this.acoes = acoes;
 	}
 
 	public Orcamento getOrcamento() {
@@ -24,12 +27,8 @@ public class GeraPedido {
 	}
 
 	public void executa() {
-		
 		Pedido novoPedido = new Pedido(this.cliente, LocalDateTime.now(), this.orcamento);
-		
-		System.out.println("Salva os dados num SGBD.");
-		System.out.println("Envia um e-mail para cliente.");
-		System.out.println("Qualquer outra ação ou comando que atenda a regra do negócio.");
+		acoes.forEach(a -> a.executarAcao(novoPedido));
 	}
 
 }
